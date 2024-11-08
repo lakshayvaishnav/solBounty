@@ -11,12 +11,19 @@ import LoginButton from "@/components/login-button";
 import { interTight } from "@/lib/fonts";
 import solanaLogo from "/public/solana.svg";
 
+interface Star {
+  x: number;
+  y: number;
+  size: number;
+  duration: number;
+}
+
 const StarField = () => {
-  const [stars, setStars] = useState([]);
+  const [stars, setStars] = useState<Star[]>([]);
 
   useEffect(() => {
     const generateStars = () => {
-      const newStars = [];
+      const newStars: Star[] = [];
       for (let i = 0; i < 200; i++) {
         newStars.push({
           x: Math.random() * 100,
@@ -25,7 +32,6 @@ const StarField = () => {
           duration: Math.random() * 3 + 1,
         });
       }
-      // @ts-ignore
       setStars(newStars);
     };
 
@@ -39,20 +45,15 @@ const StarField = () => {
           key={index}
           className="absolute rounded-full bg-white"
           style={{
-            // @ts-ignore
             left: `${star.x}%`,
-            // @ts-ignore
             top: `${star.y}%`,
-            // @ts-ignore
             width: star.size,
-            // @ts-ignore
             height: star.size,
           }}
           animate={{
             opacity: [0, 1, 0],
           }}
           transition={{
-            // @ts-ignore
             duration: star.duration,
             repeat: Infinity,
             repeatType: "reverse",
