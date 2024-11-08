@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import Button from "@/components/button";
 import ConnectWallet from "@/components/connect-wallet";
-import SolanaLogo from "@/components/img/SolanaLogo";
 import { WalletOutlinedIcon } from "@/icons";
 import { API_URL } from "@/lib/constants";
 import { coromorantGaramond } from "@/lib/fonts";

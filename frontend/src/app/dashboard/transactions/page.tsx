@@ -1,7 +1,7 @@
 "use client";
 import { API_URL } from "@/lib/constants";
 import { coromorantGaramond } from "@/lib/fonts";
-import { cn, formateDate, fromNow, shortenAddress } from "@/lib/utils";
+import { cn, formateDate, fromNow } from "@/lib/utils";
 import axios from "axios";
 import { Avatar, Accordion, AccordionItem, Skeleton } from "@nextui-org/react";
 import { useEffect, useState } from "react";

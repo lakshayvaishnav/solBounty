@@ -10,7 +10,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import toast from "react-hot-toast";
 import { User } from "@nextui-org/react";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import SolanaLogo from "@/components/img/SolanaLogo";
@@ -19,14 +18,20 @@ import ConnectWallet from "@/components/connect-wallet";
 import { instrumentSerif, inter, interTight } from "@/lib/fonts";
 import { API_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import backgroundImage from "/public/bg.png";
+
+interface Star {
+  x: number;
+  y: number;
+  size: number;
+  duration: number;
+}
 
 const StarField = () => {
-  const [stars, setStars] = useState([]);
+  const [stars, setStars] = useState<Star[]>([]);
 
   useEffect(() => {
     const generateStars = () => {
-      const newStars = [];
+      const newStars: Star[] = [];
       for (let i = 0; i < 100; i++) {
         newStars.push({
           x: Math.random() * 100,
@@ -53,9 +58,7 @@ const StarField = () => {
             width: star.size,
             height: star.size,
           }}
-          animate={{
-            opacity: [0, 1, 0],
-          }}
+          animate={{ opacity: [0, 1, 0] }}
           transition={{
             duration: star.duration,
             repeat: Infinity,
@@ -70,12 +73,11 @@ const StarField = () => {
 export default function LoginPage() {
   const router = useRouter();
   const { publicKey, signMessage, connected } = useWallet();
-  const [pubKey, setPubKey] = useState<string>();
+  
+  const [pubKey, setPubKey] = useState<string | undefined>();
   const [signature, setSignature] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
-  const [status, setStatus] = useState<"authenticated" | "unauthenticated">(
-    "unauthenticated"
-  );
+  const [status, setStatus] = useState<"authenticated" | "unauthenticated">("unauthenticated");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleClick = () => {
@@ -96,9 +98,7 @@ export default function LoginPage() {
 
   const getProfileData = async () => {
     try {
-      const res = await axios.get(`${API_URL}/v1/user/profile`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(`${API_URL}/v1/user/profile`, { withCredentials: true });
       const userData = res.data.data;
       console.log(userData);
       setProfile(userData);
@@ -113,21 +113,22 @@ export default function LoginPage() {
       console.error("no wallet connected");
       return;
     }
-
-    const message = `${
-      window.location.origin
-    } wants you to sign and verify your account for ${publicKey.toBase58()}`;
+    
+    const message = `${window.location.origin} wants you to sign and verify your account for ${publicKey.toBase58()}`;
     const encodedMessage = new TextEncoder().encode(message);
-
+    
     try {
       const signatureBuffer = await signMessage(encodedMessage);
-      const signature = Buffer.from(signatureBuffer).toString("base64");
-      console.log("signature: ", signature);
-      if (!signature) {
+      const signatureBase64 = Buffer.from(signatureBuffer).toString("base64");
+      
+      console.log("signature: ", signatureBase64);
+      
+      if (!signatureBase64) {
         throw new Error("no signature found");
       }
-      setSignature(signature);
-      return { signature, message };
+      
+      setSignature(signatureBase64);
+      return { signature: signatureBase64, message };
     } catch (error) {
       console.error("error signing transaction: ", error);
       return null;
@@ -136,13 +137,14 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     setIsLoading(true);
-
+    
     if (!connected || !publicKey) {
       toast.error("no wallet connected");
       return;
     }
 
     const response = await handleSignTransaction();
+    
     if (!response) {
       toast.error("error signing transaction");
       return;
@@ -153,32 +155,27 @@ export default function LoginPage() {
     try {
       const res = await axios.post(
         `${API_URL}/v1/auth/register`,
-        {
-          pubKey,
-          signature,
-          message,
-        },
+        { pubKey, signature, message },
         { withCredentials: true }
       );
+
       console.log("register data: ", res.data);
       toast.success("logged in successfully!");
       router.push("/dashboard");
+      
     } catch (err) {
       console.log(err);
       toast.error("error logging in");
+      
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <main
-      className={cn(
-        inter.className,
-        "min-h-screen bg-black text-white overflow-hidden relative"
-      )}
-    >
+    <main className={cn(inter.className, "min-h-screen bg-black text-white overflow-hidden relative")}>
       <StarField />
+      
       <div className="container mx-auto flex flex-col lg:flex-row min-h-screen relative z-10">
         <motion.div
           className="lg:w-1/2 p-10 flex flex-col justify-between"
@@ -187,25 +184,13 @@ export default function LoginPage() {
           transition={{ duration: 0.5 }}
         >
           <Link href="/">
-            <h1
-              className={cn(
-                interTight.className,
-                "text-2xl font-semibold tracking-tight text-white flex items-center gap-2 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
-              )}
-            >
-              <SolanaLogo height="20" color="#ffffff" />
-              solbounty
+            <h1 className={cn(interTight.className, "text-2xl font-semibold tracking-tight text-white flex items-center gap-2 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text")}>
+              <SolanaLogo height="20" color="#ffffff" /> solbounty
             </h1>
           </Link>
+          
           <div className="hidden lg:block">
-            <Image
-              src={"/media/division.gif"}
-              alt="background"
-              className="rounded-lg object-cover ml-20 mb-20 overflow-hidden"
-              style={{ objectFit: "contain" }}
-              width={400}
-              height={400}
-            />
+            <Image src={"/media/division.gif"} alt="background" className="rounded-lg object-cover ml-20 mb-20 overflow-hidden" style={{ objectFit: "contain" }} width={400} height={400} />
           </div>
         </motion.div>
 
@@ -217,60 +202,33 @@ export default function LoginPage() {
         >
           <Card className="w-full max-w-md bg-gray-900 border-gray-800">
             <CardContent className="p-6">
-              <h1
-                className={cn(
-                  instrumentSerif.className,
-                  "text-4xl font-semibold mb-6 text-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600 text-transparent bg-clip-text"
-                )}
-              >
+              <h1 className={cn(instrumentSerif.className, "text-4xl font-semibold mb-6 text-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600 text-transparent bg-clip-text")}>
                 fork it.
               </h1>
+              
               {status === "unauthenticated" && (
                 <div>
-                  <p className="text-gray-400 text-center mb-6">
-                    Login to your account to continue.
-                  </p>
-                  <Button
-                    onClick={handleClick}
-                    className="w-full bg-white text-black hover:bg-gray-200 transition-colors"
-                    disabled={isLoading}
-                  >
-                    <GitHubLogoIcon className="mr-2" />
-                    {isLoading ? "Loading..." : "Sign in with GitHub"}
+                  <p className="text-gray-400 text-center mb-6">... Login to your account to continue.</p>
+                  <Button onClick={handleClick} className="w-full bg-white text-black hover:bg-gray-200 transition-colors" disabled={isLoading}>
+                    <GitHubLogoIcon className="mr-2" /> {isLoading ? "Loading..." : "Sign in with GitHub"}
                   </Button>
                 </div>
               )}
-
+              
               {status === "authenticated" && (
                 <div className="space-y-6">
                   {profile && (
-                    <User
-                      name={profile?.name}
-                      description={profile?.login}
-                      avatarProps={{
-                        src: profile?.avatar_url as string,
-                      }}
-                    />
+                    <User name={profile?.name} description={profile?.login} avatarProps={{ src: profile?.avatar_url as string }} />
                   )}
-
                   <hr className="border-t border-gray-700" />
-
                   <div>
                     {!publicKey && (
-                      <p className="text-gray-400 mb-4">
-                        Connect wallet to continue.
-                      </p>
+                      <p className="text-gray-400 mb-4"> Connect wallet to continue. </p>
                     )}
                     <ConnectWallet />
                   </div>
-
-                  <Button
-                    onClick={handleLogin}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-colors"
-                    disabled={isLoading}
-                  >
-                    <LoginIcon color="#fff" className="mr-2" />
-                    {isLoading ? "Loading..." : "Sign in"}
+                  <Button onClick={handleLogin} className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-colors" disabled={isLoading}>
+                    <LoginIcon color="#fff"  /> {isLoading ? "Loading..." : "Sign in"}
                   </Button>
                 </div>
               )}

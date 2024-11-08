@@ -11,7 +11,22 @@ import { MedalOutlinedIcon, PlusOutlinedIcon } from "@/icons";
 import { API_URL } from "@/lib/constants";
 import SolanaLogo from "@/components/img/SolanaLogo";
 
-const Star = ({ top, left, size, delay }) => (
+interface Transaction {
+  to: {
+    avatar_url: string;
+    github_username: string;
+    name?: string;
+  };
+  pr_detail: {
+    url: string;
+    title: string;
+    number: number;
+  };
+  amount: number;
+  token: string;
+}
+
+const Star = ({ top, left, size, delay }: { top: string; left: string; size: string; delay: number }) => (
   <motion.div
     className="absolute bg-white rounded-full"
     style={{ top, left, width: size, height: size }}
@@ -22,8 +37,8 @@ const Star = ({ top, left, size, delay }) => (
 );
 
 export default function Home() {
-  const [profile, setProfile] = useState<any>(null);
-  const [transactions, setTransactions] = useState<any>([]);
+  const [profile, setProfile] = useState<{ name?: string; login?: string } | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
     getProfileData();
@@ -77,7 +92,7 @@ export default function Home() {
         >
           Welcome back
           {profile
-            ? profile?.name
+            ? profile.name
               ? `, ${profile.name.split(" ")[0]}`
               : `, ${profile.login}`
             : ""}
@@ -88,7 +103,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 gap-5 mt-10 sm:grid-cols-2 lg:grid-cols-3">
           <Link href={"/dashboard/create-bounty"}>
-            <div className="border border-purple-700 rounded-[13px] cursor-pointer outline outline-transparent hover:outline-4 hover:outline-purple-600 transition-all 0.2s ease-in-out">
+            <div className="border border-purple-700 rounded-[13px] cursor-pointer outline outline-transparent hover:outline-4 hover:outline-purple-600 transition-all duration-200 ease-in-out">
               <div className="p-7 space-y-5 bg-purple-900/30 rounded-xl text-start">
                 <PlusOutlinedIcon color="#d8b4fe" size={45} />
                 <div className="flex flex-col gap-1 w-full">
@@ -104,7 +119,7 @@ export default function Home() {
           </Link>
 
           <Link href={"/dashboard/explore-bounty"}>
-            <div className="border border-purple-700 rounded-[13px] cursor-pointer outline outline-transparent hover:outline-4 hover:outline-purple-600 transition-all 0.2s ease-in-out">
+            <div className="border border-purple-700 rounded-[13px] cursor-pointer outline outline-transparent hover:outline-4 hover:outline-purple-600 transition-all duration-200 ease-in-out">
               <div className="p-7 space-y-5 bg-purple-900/30 rounded-xl text-start">
                 <MedalOutlinedIcon color="#d8b4fe" size={45} />
                 <div className="flex flex-col gap-1 w-full">
@@ -147,7 +162,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="mt-5 pb-10 flex flex-col gap-5">
-              {transactions.map((transaction: any, index: number) => (
+              {transactions.map((transaction, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Avatar
@@ -157,6 +172,7 @@ export default function Home() {
                     <div className="flex flex-col gap-1.5">
                       <a
                         target="_blank"
+                        rel="noopener noreferrer"
                         href={`https://github.com/${transaction.to.github_username}`}
                         className="text-base font-medium text-purple-200 leading-none hover:underline cursor-pointer"
                       >
@@ -166,6 +182,7 @@ export default function Home() {
                       </a>
                       <a
                         target="_blank"
+                        rel="noopener noreferrer"
                         href={transaction.pr_detail.url}
                         className="text-sm text-purple-400 leading-none hover:underline cursor-pointer"
                       >
@@ -175,16 +192,12 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {transaction.token === "SOL" ? (
+                    {transaction.token === "SOL" && (
                       <SolanaLogo height="12" />
-                    ) : (
-                      ""
                     )}
                     <p className="text-purple-200 font-medium text-base flex items-center gap-1">
                       {transaction.amount}
-                      <span className="text-purple-400">
-                        {transaction.token}
-                      </span>
+                      <span className="text-purple-400">{transaction.token}</span>
                     </p>
                   </div>
                 </div>

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import Button from "@/components/button";
 import CallToAction from "@/components/call-to-action";
 import GitHubLogo from "@/components/img/GitHubLogo";
 import SolanaLogo from "@/components/img/SolanaLogo";
