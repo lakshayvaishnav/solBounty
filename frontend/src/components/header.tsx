@@ -35,7 +35,7 @@ export default function Header() {
             <div className="flex items-center gap-2">
               <SolanaLogo height="18" monoChrome={true} />
               <h1 className="text-lg font-medium tracking-tight text-purple-300">
-                SolPayout
+                SolBounty
               </h1>
             </div>
           </Link>

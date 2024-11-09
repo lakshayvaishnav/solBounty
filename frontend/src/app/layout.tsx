@@ -5,7 +5,7 @@ import { Providers } from "./providers";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "SolPayouts",
+  title: "SolBounty",
   description: "bounties on GitHub with Solana",
 };
 

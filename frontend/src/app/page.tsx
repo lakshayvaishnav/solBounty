@@ -73,7 +73,7 @@ export default function LandingPage() {
             className={`${interTight.className} text-xl font-semibold tracking-tight flex items-center gap-2`}
           >
             <SolanaLogo color="#ffffff" />
-            SolPayout
+            SolBounty
           </h1>
           <LoginButton />
         </header>
