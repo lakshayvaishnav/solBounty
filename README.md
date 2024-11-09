@@ -1,17 +1,17 @@
 # solbounty
 **Reward contributors on github with solana**
 
-Demo Video: [YouTube Link](https://youtu.be/W4ODra6x-R0)
+[Demo Video] 
 
 ### Overview
 
-![landing page] (./media/home.png)
+![landing page](./media/home.png)
 
-![solbounty dashboard] (./media/dashboard.png)
+![solbounty dashboard](./media/dashboard.png)
 
-![create bounty] (./media/bounty.png)
+![create bounty](./media/bounty.png)
 
-![bounty button] (./media/bountybutton.png)
+![bounty button](./media/bountybutton.png)
 
 
 
