@@ -1,6 +1,6 @@
 # Solbounty Browser Extension
 
-![solbounty extension](../media/extension-cover.png)
+
 
 ### Installation and Usage
 
@@ -13,4 +13,4 @@
 7. Reload the extension if required
 8. The extension should now be installed
 
-![extension](../media/browser-extension.png)
+
